@@ -1,3 +1,8 @@
+<form [formGroup]="form">
+  <div>
+    <input type="text" formControlName="searchKey"/>
+  </div>
+</form>
 <div class="device-table" *ngIf="deviceTable">
   <table class="device-table__table">
     <caption class="device-table__caption">{{ deviceTable.title }}</caption>
