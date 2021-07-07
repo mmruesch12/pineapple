@@ -13,6 +13,7 @@ export class TableComponent implements OnInit {
 
   deviceTable: DeviceTable;
   form: FormGroup;
+  private originalRows: any;
 
   constructor(private deviceService: DeviceService) { }
 
@@ -24,13 +25,18 @@ export class TableComponent implements OnInit {
     });
 
     this.form.controls['searchKey'].valueChanges.subscribe(value => {
-      console.log(value);
+      if (value === '') {
+        this.deviceTable.rows = this.originalRows;
+      }
+      this.deviceTable.rows  = this.deviceTable.rows.filter(row => row.model.toLowerCase().includes(value.toLowerCase())
+      );
     });
   }
 
   private setupTable(): void {
     this.deviceService.getAll().subscribe((data: DeviceTable) => {
       this.deviceTable = data;
+      this.originalRows = data.rows;
     });
   }
 
