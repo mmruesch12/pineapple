@@ -24,7 +24,8 @@
       <caption class="device-table__caption">{{ deviceTable.title }}</caption>
       <thead>
         <th *ngFor="let header of deviceTable.headers" class="device-table__th">
-          {{ header | titlecase }}
+          <span> {{ header | titlecase }} </span>
+          <button (click)="sortRows(header)">Sort</button>
         </th>
       </thead>
       <tbody>

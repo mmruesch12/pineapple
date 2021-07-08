@@ -21,6 +21,7 @@ export class TableComponent implements OnInit, OnDestroy {
   deviceTable: DeviceTable;
   form: FormGroup;
   private originalRows: any;
+  private sortAscending: boolean = true;
 
   // Default to filtering by device model
   searchKey: string = 'model';
@@ -56,6 +57,37 @@ export class TableComponent implements OnInit, OnDestroy {
   changeSearch(searchType: string) {
     this.searchKey = searchType;
   }
+
+  sortRows(sortType: string) {
+    this.deviceTable.rows = this.deviceTable.rows.sort((row1, row2) => {
+      const type1 = row1[sortType].toLowerCase();
+      const type2 = row2[sortType].toLowerCase();
+
+      return this.sortAscending ? this.ascendingCompare(type1, type2) : this.descendingCompare(type1, type2);
+    });
+    this.sortAscending = !this.sortAscending;
+  }
+
+  private ascendingCompare(type1, type2) {
+    let compare = 0;
+    if (type1 > type2) {
+      compare = 1;
+    } else if (type1 < type2) {
+      compare = -1;
+    }
+    return compare;
+  }
+
+  private descendingCompare(type1, type2) {
+    let compare = 0;
+    if (type1 < type2) {
+      compare = 1;
+    } else if (type1 > type2) {
+      compare = -1;
+    }
+    return compare;
+  }
+
 
   ngOnDestroy() {
     // Ends the open observable subscriptions
