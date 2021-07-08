@@ -1,6 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { DeviceTable } from '../models/device-table.model';
 import { Device } from '../models/device.model';
 
