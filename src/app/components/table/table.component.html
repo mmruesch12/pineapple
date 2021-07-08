@@ -13,7 +13,7 @@
           (click)="changeSearch(header)"
           [ngClass]="{'selected': searchKey === header}"
           class="button">
-          {{ header }}
+          {{ header | titlecase}}
         </button>
       </div>
     </div>
