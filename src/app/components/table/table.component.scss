@@ -25,3 +25,28 @@ $card-shadow: 0 4px 9px rgba(0, 0, 0, .2);
     }
   }
 }
+
+.search-bar {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.center {
+  text-align: center;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.button {
+  padding: 8px 12px;
+  margin: 5px;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.selected {
+  background-color:lightskyblue;
+}
+

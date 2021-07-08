@@ -22,20 +22,23 @@ export class TableComponent implements OnInit, OnDestroy {
   form: FormGroup;
   private originalRows: any;
 
+  // Default to filtering by device model
+  searchKey: string = 'model';
+
   constructor(private deviceService: DeviceService) { }
 
   ngOnInit(): void {
     this.setupTable();
 
     this.form = new FormGroup({
-      searchKey: new FormControl(''),
+      search: new FormControl(''),
     });
 
-    this.form.controls['searchKey'].valueChanges
+    this.form.controls['search'].valueChanges
       .pipe(takeUntil(this.stop$))
       .subscribe(value => {
         let tempRows = this.originalRows;
-        this.deviceTable.rows  = tempRows.filter(row => row.model.toLowerCase().includes(value.toLowerCase())
+        this.deviceTable.rows  = tempRows.filter(row => row[this.searchKey].toLowerCase().includes(value.toLowerCase())
         );
       });
   }
@@ -48,6 +51,10 @@ export class TableComponent implements OnInit, OnDestroy {
         console.log(this.deviceTable);
         this.originalRows = data.rows;
       });
+  }
+
+  changeSearch(searchType: string) {
+    this.searchKey = searchType;
   }
 
   ngOnDestroy() {

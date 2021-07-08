@@ -1,22 +1,39 @@
-<form [formGroup]="form">
-  <div>
-    <input type="text" formControlName="searchKey"/>
+
+<div *ngIf="deviceTable">
+
+  <form [formGroup]="form">
+    <div class="center">
+      <div class="search-bar">
+        <h3>Search</h3>
+        <input type="text" formControlName="search"/>
+      </div>
+      <p>Choose your filter</p>
+      <div *ngFor="let header of deviceTable.headers" class="inline-block">
+        <button
+          (click)="changeSearch(header)"
+          [ngClass]="{'selected': searchKey === header}"
+          class="button">
+          {{ header }}
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="device-table">
+    <table class="device-table__table">
+      <caption class="device-table__caption">{{ deviceTable.title }}</caption>
+      <thead>
+        <th *ngFor="let header of deviceTable.headers" class="device-table__th">
+          {{ header | titlecase }}
+        </th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of deviceTable.rows">
+          <td *ngFor="let column of deviceTable.headers">
+            {{ row[column] }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-</form>
-<div class="device-table" *ngIf="deviceTable">
-  <table class="device-table__table">
-    <caption class="device-table__caption">{{ deviceTable.title }}</caption>
-    <thead>
-      <th *ngFor="let header of deviceTable.headers" class="device-table__th">
-        {{ header | titlecase }}
-      </th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let row of deviceTable.rows">
-        <td *ngFor="let column of deviceTable.headers">
-          {{ row[column] }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>
