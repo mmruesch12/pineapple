@@ -4,6 +4,7 @@ import { DeviceService } from 'src/app/services/device.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
+import { TableUtilService } from 'src/app/services/table-util.service';
 
 
 
@@ -21,20 +22,30 @@ export class TableComponent implements OnInit, OnDestroy {
   deviceTable: DeviceTable;
   form: FormGroup;
   private originalRows: any;
-  private sortAscending: boolean = true;
 
   // Default to filtering by device model
   searchKey: string = 'model';
 
-  constructor(private deviceService: DeviceService) { }
+  constructor(private deviceService: DeviceService, private tableUtilService: TableUtilService) { }
 
   ngOnInit(): void {
     this.setupTable();
+    this.setupForm();
+    this.subscribeToFormChanges();
+  }
 
-    this.form = new FormGroup({
-      search: new FormControl(''),
-    });
+  // Changes the header key that we filter upon when user clicks option
+  changeFilter(searchType: string): void {
+    this.form.controls['search'].setValue(''); // Reset search
+    this.searchKey = searchType; // Set filter key
+  }
 
+  // Sorts the rows alphabetically based on which column button is clicked
+  sortRows(sortType: string): void {
+    this.deviceTable.rows = this.tableUtilService.sortRows(this.deviceTable, sortType);
+  }
+
+  private subscribeToFormChanges(): void {
     this.form.controls['search'].valueChanges
       .pipe(takeUntil(this.stop$))
       .subscribe(value => {
@@ -44,50 +55,20 @@ export class TableComponent implements OnInit, OnDestroy {
       });
   }
 
+  private setupForm(): void {
+    this.form = new FormGroup({
+      search: new FormControl(''),
+    });
+  }
+
   private setupTable(): void {
     this.deviceService.getAll()
       .pipe(take(1))
       .subscribe((data: DeviceTable) => {
         this.deviceTable = data;
-        console.log(this.deviceTable);
         this.originalRows = data.rows;
       });
   }
-
-  changeSearch(searchType: string) {
-    this.searchKey = searchType;
-  }
-
-  sortRows(sortType: string) {
-    this.deviceTable.rows = this.deviceTable.rows.sort((row1, row2) => {
-      const type1 = row1[sortType].toLowerCase();
-      const type2 = row2[sortType].toLowerCase();
-
-      return this.sortAscending ? this.ascendingCompare(type1, type2) : this.descendingCompare(type1, type2);
-    });
-    this.sortAscending = !this.sortAscending;
-  }
-
-  private ascendingCompare(type1, type2) {
-    let compare = 0;
-    if (type1 > type2) {
-      compare = 1;
-    } else if (type1 < type2) {
-      compare = -1;
-    }
-    return compare;
-  }
-
-  private descendingCompare(type1, type2) {
-    let compare = 0;
-    if (type1 < type2) {
-      compare = 1;
-    } else if (type1 > type2) {
-      compare = -1;
-    }
-    return compare;
-  }
-
 
   ngOnDestroy() {
     // Ends the open observable subscriptions

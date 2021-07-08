@@ -10,7 +10,7 @@
       <p>Choose your filter</p>
       <div *ngFor="let header of deviceTable.headers" class="inline-block">
         <button
-          (click)="changeSearch(header)"
+          (click)="changeFilter(header)"
           [ngClass]="{'selected': searchKey === header}"
           class="button">
           {{ header | titlecase}}
