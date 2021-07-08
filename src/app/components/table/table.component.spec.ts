@@ -3,6 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeviceTable } from 'src/app/models/device-table.model';
 import { Device } from 'src/app/models/device.model';
 import { DemoMaterialModule } from 'src/app/modules/material.module';
+import { DeviceService } from 'src/app/services/device.service';
+import { of, Observable } from 'rxjs';
 
 import { TableComponent } from './table.component';
 
@@ -66,11 +68,16 @@ describe('TableComponent', () => {
   });
 
   describe('ngOnInit', () => {
+    beforeEach(() => {
+      const deviceService = fixture.debugElement.injector.get(DeviceService);
+      spyOn(deviceService, 'getAll').and.callFake((): Observable<DeviceTable> => {
+        return of(devicesTableFixture);
+      });
+    });
+
     it('should set deviceTable to response from service', () => {
       component.deviceTable = null;
-
       component.ngOnInit();
-
       expect(component.deviceTable).toEqual(devicesTableFixture);
     });
   });
